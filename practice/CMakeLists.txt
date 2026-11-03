@@ -7,7 +7,7 @@ project(${PROJECT})
 
 # To use Intel Compiler, run the next command from the ./build directory:
 # On Windows (change generator and toolset according to your system):
-# cmake ../ -G "Visual Studio 17 2026" -T "Intel C++ Compiler 2025"
+# cmake ../ -G "Visual Studio 18 2026" -T "Intel C++ Compiler 2025"
 # On Linux:
 # cmake ../ -DCMAKE_CXX_COMPILER=icpx -DCMAKE_C_COMPILER=icx
 

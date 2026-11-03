@@ -1,22 +1,28 @@
-cmake_minimum_required(VERSION 3.1.0)
+cmake_minimum_required(VERSION 3.25)
 
 option(VECTORIZED "vectorized code" OFF)
 
 set(PROJECT "simple_particle_pusher")
 project(${PROJECT})
 
-set(CMAKE_CXX_STANDARD 11)
+# To use Intel Compiler, run the next command from the ./build directory:
+# On Windows (change generator and toolset according to your system):
+# cmake ../ -G "Visual Studio 17 2026" -T "Intel C++ Compiler 2025"
+# On Linux:
+# cmake ../ -DCMAKE_CXX_COMPILER=icpx -DCMAKE_C_COMPILER=icx
+
+set(CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE})
 
 if (UNIX)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O2 -qopt-report=3 -qopenmp")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O2 -qopt-report -fiopenmp")
 	if (VECTORIZED)
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -xHost -qopt-zmm-usage=high")
 	endif()
 elseif (WIN32)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /debug /O2 /Qopt-report=3 /Qopenmp")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /debug /O2 /Qopt-report /Qiopenmp")
 	if (VECTORIZED)
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /QxHost /Qopt-zmm-usage=high")
 	endif()

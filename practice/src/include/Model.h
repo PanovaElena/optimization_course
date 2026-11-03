@@ -10,46 +10,46 @@ const FP LIGHT_VELOCITY = 29979245800.0;  // CGS
 
 class Model {
 
-	const Vector3 E, B;  // constant electromagnetic field
-	ParticleEnsemble particles;
+    const Vector3 E, B;  // constant electromagnetic field
+    ParticleEnsemble particles;
 
 public:
 
-	Model(const Vector3& E, const Vector3& B,
-		const std::vector<Particle>& particles) :
-		E(E), B(B), particles(particles) {}
+    Model(const Vector3& E, const Vector3& B,
+        const std::vector<Particle>& particles) :
+        E(E), B(B), particles(particles) {}
 
-	const ParticleEnsemble& getParticles() { return particles; }
+    const ParticleEnsemble& getParticles() { return particles; }
 
-	void update(const FP& dt) {  // dt is the time step
+    void update(const FP& dt) {  // dt is time step
 
-		const FP coeffR = dt / (FP)6;
-		const FP coeffV = coeffR / ELECTRON_MASS;
+        const FP coeffR = dt / (FP)6;
+        const FP coeffV = coeffR / ELECTRON_MASS;
 
-		for (int i = 0; i < particles.getSize(); i++) {
-			Vector3 v = particles[i].v;
+        for (int i = 0; i < particles.getSize(); i++) {
+            Vector3 v = particles[i].v;
 
-			// compute the new particle position (RK4)
-			Vector3 k1 = v;
-			Vector3 k2 = v + (FP)0.5 * dt * k1;
-			Vector3 k3 = v + (FP)0.5 * dt * k2;
-			Vector3 k4 = v + dt * k3;
-			particles[i].r += coeffR * (k1 + (FP)2 * k2 + (FP)2 * k3 + k4);
+            // compute new particle position (RK4)
+            Vector3 k1 = v;
+            Vector3 k2 = v + (FP)0.5 * dt * k1;
+            Vector3 k3 = v + (FP)0.5 * dt * k2;
+            Vector3 k4 = v + dt * k3;
+            particles[i].r += coeffR * (k1 + (FP)2 * k2 + (FP)2 * k3 + k4);
 
-			// compute the new particle velocity (RK4)
-			k1 = getLorentzForce(v);
-			k2 = getLorentzForce(v + (FP)0.5 * dt * k1);
-			k3 = getLorentzForce(v + (FP)0.5 * dt * k2);
-			k4 = getLorentzForce(v + dt * k3);
-			particles[i].v += coeffV * (k1 + (FP)2 * k2 + (FP)2 * k3 + k4);
-		}
-	}
+            // compute new particle velocity (RK4)
+            k1 = getLorentzForce(v);
+            k2 = getLorentzForce(v + (FP)0.5 * dt * k1);
+            k3 = getLorentzForce(v + (FP)0.5 * dt * k2);
+            k4 = getLorentzForce(v + dt * k3);
+            particles[i].v += coeffV * (k1 + (FP)2 * k2 + (FP)2 * k3 + k4);
+        }
+    }
 
 
 private:
 
-	Vector3 getLorentzForce(const Vector3& v) {  // the Lorentz force
-		return ELECTRON_CHARGE * (E + cross(v, B) / LIGHT_VELOCITY);
-	}
+    Vector3 getLorentzForce(const Vector3& v) {  // Lorentz force
+        return ELECTRON_CHARGE * (E + cross(v, B) / LIGHT_VELOCITY);
+    }
 
 };

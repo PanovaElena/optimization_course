@@ -44,7 +44,7 @@ bool checkResult(const ParticleEnsemble& particles, FP time) {
     FP eps = 1e-4*LIGHT_VELOCITY;
     for (int i = 0; i < particles.getSize(); i++) {
         std::pair<Vector3, Vector3> analyticalSolution = getAnalyticalSolution(time);
-		if ((analyticalSolution.first - particles.getR(i)).getNorm() > eps ||  // r
+        if ((analyticalSolution.first - particles.getR(i)).getNorm() > eps ||  // r
             (analyticalSolution.second - particles.getV(i)).getNorm() > eps)   // v
             return false;
     }
@@ -67,8 +67,8 @@ int main()
     FP time = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
 
     auto particle = model.getParticles().getParticle(0);
-	std::cout << particle.r.x << " " << particle.r.y << " " << particle.r.z << "; " 
-		<< particle.v.x << " " << particle.v.y << " " << particle.v.z << std::endl;
+    std::cout << particle.r.x << " " << particle.r.y << " " << particle.r.z << "; " 
+        << particle.v.x << " " << particle.v.y << " " << particle.v.z << std::endl;
 
     if (!checkResult(model.getParticles(), ITERATION_NUMBER * TIME_STEP))
         std::cout << "ERROR: WRONG RESULT!!!" << std::endl;
